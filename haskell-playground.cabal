@@ -28,7 +28,9 @@ library
       Control.Monad
       Control.Monad.Identity
       Control.Monad.Reader
+      Control.Monad.Writer
       Data.Maybe
+      Data.Semigroup
       Data.ZipList
       Functor.Applicative
       Functor.Covariant

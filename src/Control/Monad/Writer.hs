@@ -8,61 +8,49 @@
 -- Module declaration
 -- ----------------------------------------------------------------------------
 
-module Control.Monad
+module Control.Monad.Writer
   (
-    Monad(..)
-  , (>>=)
-  , (>>)
-  , (=<<)
-  , (>=>)
+    Writer(..)
   ) where
 
 -- ----------------------------------------------------------------------------
 -- External imports
 -- ----------------------------------------------------------------------------
 
-import Data.List 
-import Prelude (const)
+-- import Prelude ((.), ($), const)
 
 -- ----------------------------------------------------------------------------
 -- Internal imports
 -- ----------------------------------------------------------------------------
 
-import Functor.Applicative
-import Functor.Covariant
+-- import Control.Monad
+-- import Functor.Applicative
+-- import Functor.Covariant
 
 -- ----------------------------------------------------------------------------
--- Monad type class
+-- Writer data type definition
 -- ----------------------------------------------------------------------------
 
-class Applicative m => Monad m where
-  join :: m (m a) -> m a
+newtype Writer w a = Writer { runWriter :: (w, a) }
 
 -- ----------------------------------------------------------------------------
--- Monad operators
+-- Writer instance for Covariant
 -- ----------------------------------------------------------------------------
 
-infixl 1 >>=
-(>>=) :: Monad m => m a -> (a -> m b) -> m b
-mx >>= f = join (fmap f mx)
-
-infixl 1 >>
-(>>) :: Monad m => m a -> m b -> m b
-mx >> my = mx >>= const my
-
-infixr 1 =<<
-
-(=<<) :: Monad m => (a -> m b) -> m a -> m b
-f =<< mx = mx >>= f
-
-infixr 1 >=>
-
-(>=>) :: Monad m => (a -> m b) -> (b -> m c) -> (a -> m c)
-(>=>) f g x = f x >>= g
+-- instance Covariant (Writer w) where
+--   fmap f (Writer g) = Writer (f . g)
 
 -- ----------------------------------------------------------------------------
--- List instance for Monad
+-- Writer instance for Applicative
 -- ----------------------------------------------------------------------------
 
-instance Monad [] where
-  join = concat
+-- instance Applicative (Writer w) where
+--   pure x = Writer (const x)
+--   Writer f <*> Writer g = Writer $ \x -> f x (g x)
+
+-- ----------------------------------------------------------------------------
+-- Writer instance for Monad
+-- ----------------------------------------------------------------------------
+
+-- instance Monad (Writer w) where
+--   join (Writer f) = Writer $ \x -> runWriter (f x) x

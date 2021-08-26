@@ -8,61 +8,39 @@
 -- Module declaration
 -- ----------------------------------------------------------------------------
 
-module Control.Monad
+module Data.Semigroup
   (
-    Monad(..)
-  , (>>=)
-  , (>>)
-  , (=<<)
-  , (>=>)
+    Semigroup(..)
+  , stimes
   ) where
 
 -- ----------------------------------------------------------------------------
--- External imports
+-- Expternal imports
 -- ----------------------------------------------------------------------------
 
-import Data.List 
-import Prelude (const)
+import Prelude ((-), (++), Integral, toInteger)
 
 -- ----------------------------------------------------------------------------
--- Internal imports
+-- Semigroup type class definition
 -- ----------------------------------------------------------------------------
 
-import Functor.Applicative
-import Functor.Covariant
+infixr 6 <>
+
+class Semigroup a where
+  (<>) :: a -> a -> a
 
 -- ----------------------------------------------------------------------------
--- Monad type class
+-- Semigroup type class functions
 -- ----------------------------------------------------------------------------
 
-class Applicative m => Monad m where
-  join :: m (m a) -> m a
+stimes :: (Semigroup a, Integral b) => b -> a -> a
+stimes n x = go (toInteger n - 1) x
+  where go 0 acc = acc
+        go i acc = go (i-1) (acc <> x)
 
 -- ----------------------------------------------------------------------------
--- Monad operators
+-- List instance for Semigroup
 -- ----------------------------------------------------------------------------
 
-infixl 1 >>=
-(>>=) :: Monad m => m a -> (a -> m b) -> m b
-mx >>= f = join (fmap f mx)
-
-infixl 1 >>
-(>>) :: Monad m => m a -> m b -> m b
-mx >> my = mx >>= const my
-
-infixr 1 =<<
-
-(=<<) :: Monad m => (a -> m b) -> m a -> m b
-f =<< mx = mx >>= f
-
-infixr 1 >=>
-
-(>=>) :: Monad m => (a -> m b) -> (b -> m c) -> (a -> m c)
-(>=>) f g x = f x >>= g
-
--- ----------------------------------------------------------------------------
--- List instance for Monad
--- ----------------------------------------------------------------------------
-
-instance Monad [] where
-  join = concat
+instance Semigroup [a] where
+  (<>) = (++)

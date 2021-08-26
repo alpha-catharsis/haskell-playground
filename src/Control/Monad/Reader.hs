@@ -11,13 +11,16 @@
 module Control.Monad.Reader
   (
     Reader(..)
+  , ask
+  , asks
+  , local
   ) where
 
 -- ----------------------------------------------------------------------------
 -- External imports
 -- ----------------------------------------------------------------------------
 
-import Prelude ((.), ($), const)
+import Prelude ((.), ($), const, id)
 
 -- ----------------------------------------------------------------------------
 -- Internal imports
@@ -54,3 +57,17 @@ instance Applicative (Reader e) where
 
 instance Monad (Reader e) where
   join (Reader f) = Reader $ \x -> runReader (f x) x
+
+-- ----------------------------------------------------------------------------
+-- Reader monad functions
+-- ----------------------------------------------------------------------------
+
+ask :: Reader e e
+ask = Reader id
+
+asks :: (e -> a) -> Reader e a
+asks = Reader
+
+local :: (e -> e) -> Reader e a -> Reader e a
+local f (Reader g) = Reader (g . f)
+

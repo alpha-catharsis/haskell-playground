@@ -30,6 +30,7 @@ library
       Control.Monad.Reader
       Control.Monad.Writer
       Data.Maybe
+      Data.Monoid
       Data.Semigroup
       Data.ZipList
       Functor.Applicative

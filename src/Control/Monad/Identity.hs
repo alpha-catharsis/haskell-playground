@@ -8,7 +8,7 @@
 -- Module declaration
 -- ----------------------------------------------------------------------------
 
-module Data.Identity
+module Control.Monad.Identity
   (
     Identity(..)
   ) where
@@ -17,6 +17,7 @@ module Data.Identity
 -- Internal imports
 -- ----------------------------------------------------------------------------
 
+import Control.Monad
 import Functor.Applicative
 import Functor.Covariant
 
@@ -40,3 +41,10 @@ instance Covariant Identity where
 instance Applicative Identity where
   pure x = Identity x
   Identity f <*> l = fmap f l
+
+-- ----------------------------------------------------------------------------
+-- Identity instance for Monad
+-- ----------------------------------------------------------------------------
+
+instance Monad Identity where
+  join (Identity (Identity x)) = Identity x

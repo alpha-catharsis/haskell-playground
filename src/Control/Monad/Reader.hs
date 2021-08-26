@@ -8,10 +8,16 @@
 -- Module declaration
 -- ----------------------------------------------------------------------------
 
-module Data.Maybe
+module Control.Monad.Reader
   (
-    Maybe(..)
+    Reader(..)
   ) where
+
+-- ----------------------------------------------------------------------------
+-- External imports
+-- ----------------------------------------------------------------------------
+
+import Prelude ((.), ($), const)
 
 -- ----------------------------------------------------------------------------
 -- Internal imports
@@ -22,32 +28,29 @@ import Functor.Applicative
 import Functor.Covariant
 
 -- ----------------------------------------------------------------------------
--- Maybe data type definition
+-- Reader data type definition
 -- ----------------------------------------------------------------------------
 
-data Maybe a = Nothing | Just a
+newtype Reader e a = Reader { runReader :: e -> a }
 
 -- ----------------------------------------------------------------------------
--- Maybe instance for Covariant
+-- Reader instance for Covariant
 -- ----------------------------------------------------------------------------
 
-instance Covariant Maybe where
-  fmap _ Nothing  = Nothing
-  fmap f (Just x) = Just (f x)
+instance Covariant (Reader e) where
+  fmap f (Reader g) = Reader (f . g)
 
 -- ----------------------------------------------------------------------------
--- Maybe instance for Applicative
+-- Reader instance for Applicative
 -- ----------------------------------------------------------------------------
 
-instance Applicative Maybe where
-  pure x = Just x
-  Nothing  <*> _ = Nothing
-  (Just f) <*> l = fmap f l
+instance Applicative (Reader e) where
+  pure x = Reader (const x)
+  Reader f <*> Reader g = Reader $ \x -> f x (g x)
 
 -- ----------------------------------------------------------------------------
--- Maybe instance for Monad
+-- Reader instance for Monad
 -- ----------------------------------------------------------------------------
 
-instance Monad Maybe where
-  join Nothing = Nothing
-  join (Just m) = m
+instance Monad (Reader e) where
+  join (Reader f) = Reader $ \x -> runReader (f x) x

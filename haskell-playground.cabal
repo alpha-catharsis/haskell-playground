@@ -26,7 +26,8 @@ source-repository head
 library
   exposed-modules:
       Control.Monad
-      Data.Identity
+      Control.Monad.Identity
+      Control.Monad.Reader
       Data.Maybe
       Data.ZipList
       Functor.Applicative

@@ -28,6 +28,7 @@ library
       Control.Monad
       Control.Monad.Identity
       Control.Monad.Reader
+      Control.Monad.State
       Control.Monad.Writer
       Data.Maybe
       Data.Monoid

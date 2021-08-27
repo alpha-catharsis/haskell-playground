@@ -30,6 +30,7 @@ library
       Control.Monad.Identity
       Control.Monad.Reader
       Control.Monad.State
+      Control.Monad.Transformers.MaybeT
       Control.Monad.Writer
       Data.Maybe
       Data.Monoid

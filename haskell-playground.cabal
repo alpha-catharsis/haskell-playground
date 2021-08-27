@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Control.Monad
+      Control.Monad.Cont
       Control.Monad.Identity
       Control.Monad.Reader
       Control.Monad.State
